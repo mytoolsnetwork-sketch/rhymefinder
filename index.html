@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rhyme Finder – Find Perfect Rhymes Instantly</title>
+  <meta name="description" content="Find perfect rhymes, near rhymes, and synonyms for any word. Free online rhyme finder tool for poets, songwriters, and students." />
+  <meta name="keywords" content="rhyme finder, rhymes, poetry tool, rhyming words, songwriting, word rhymes" />
+
+  <!-- Favicon inline SVG as data URI -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23FF6B9D'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='36' font-family='serif'>🎵</text></svg>" />
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8825736074631088" crossorigin="anonymous"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --pink:    #FF6B9D;
+      --purple:  #A855F7;
+      --yellow:  #FFD93D;
+      --cyan:    #06D6A0;
+      --orange:  #FF9F43;
+      --bg:      #FFF9FB;
+      --card:    #FFFFFF;
+      --text:    #2D1B4E;
+      --muted:   #7B6A8D;
+      --radius:  16px;
+      --shadow:  0 4px 24px rgba(168,85,247,0.10);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #FF6B9D 0%, #A855F7 60%, #06D6A0 100%);
+      padding: 2rem 1rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .logo {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.8rem;
+      color: #fff;
+      letter-spacing: 1px;
+      text-shadow: 2px 3px 0 rgba(0,0,0,0.15);
+    }
+    .logo span { color: var(--yellow); }
+    header p {
+      color: rgba(255,255,255,0.90);
+      font-size: 1rem;
+      margin-top: 0.4rem;
+      font-weight: 600;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2rem 1rem 4rem;
+    }
+
+    /* ── AD BANNER ── */
+    .ad-banner {
+      background: #f3f0ff;
+      border: 1.5px dashed #A855F7;
+      border-radius: var(--radius);
+      padding: 0.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── SEARCH BOX ── */
+    .search-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .search-card label {
+      display: block;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+    .input-row {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .input-row input {
+      flex: 1;
+      padding: 0.85rem 1.2rem;
+      border: 2px solid #e9d5ff;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      outline: none;
+      transition: border-color .2s;
+      background: #fdf8ff;
+    }
+    .input-row input:focus { border-color: var(--purple); }
+    .input-row input::placeholder { color: #c4b5d4; font-weight: 400; }
+    .btn-find {
+      padding: 0.85rem 1.6rem;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      white-space: nowrap;
+      letter-spacing: 0.5px;
+    }
+    .btn-find:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(168,85,247,0.35); }
+    .btn-find:active { transform: translateY(0); }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1.5rem 0 1rem;
+      flex-wrap: wrap;
+    }
+    .tab {
+      padding: 0.45rem 1.1rem;
+      border-radius: 20px;
+      border: 2px solid transparent;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all .2s;
+      background: #f3f0ff;
+      color: var(--purple);
+    }
+    .tab.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+    .tab:hover:not(.active) { border-color: var(--purple); }
+
+    /* ── RESULTS ── */
+    .section-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .section-title .badge {
+      background: var(--yellow);
+      color: #7a5a00;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 20px;
+    }
+    .rhyme-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .rhyme-pill {
+      background: var(--card);
+      border: 2px solid #e9d5ff;
+      border-radius: 24px;
+      padding: 0.45rem 1rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all .18s;
+      color: var(--text);
+      position: relative;
+    }
+    .rhyme-pill:hover {
+      background: var(--purple);
+      border-color: var(--purple);
+      color: #fff;
+      transform: scale(1.06);
+    }
+    .rhyme-pill.exact { border-color: var(--pink); }
+    .rhyme-pill.exact:hover { background: var(--pink); border-color: var(--pink); }
+    .rhyme-pill.near { border-color: var(--cyan); }
+    .rhyme-pill.near:hover { background: var(--cyan); border-color: var(--cyan); color: var(--text); }
+
+    /* ── STATES ── */
+    .state-box {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--muted);
+    }
+    .state-box .emoji { font-size: 3.5rem; margin-bottom: 0.75rem; display: block; }
+    .state-box p { font-size: 1.05rem; font-weight: 600; }
+    .loader {
+      display: inline-block;
+      width: 36px; height: 36px;
+      border: 4px solid #e9d5ff;
+      border-top-color: var(--purple);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── COPY TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 1.5rem; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--text);
+      color: #fff;
+      padding: 0.65rem 1.5rem;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: transform .3s;
+      z-index: 9999;
+      pointer-events: none;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── HOW IT WORKS ── */
+    .how-section {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.75rem 2rem;
+      margin: 2rem 0;
+    }
+    .how-section h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: var(--purple);
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+    .step {
+      text-align: center;
+      padding: 1rem 0.5rem;
+    }
+    .step .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .step strong { display: block; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .step span { font-size: 0.85rem; color: var(--muted); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text);
+      color: rgba(255,255,255,0.65);
+      text-align: center;
+      padding: 1.5rem 1rem;
+      font-size: 0.88rem;
+    }
+    footer a { color: var(--yellow); text-decoration: none; font-weight: 700; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── COOKIE BANNER ── */
+    #cookie-banner {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--text);
+      color: #fff;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      z-index: 9990;
+      flex-wrap: wrap;
+    }
+    #cookie-banner p { font-size: 0.88rem; flex: 1; color: rgba(255,255,255,0.85); }
+    #cookie-banner a { color: var(--yellow); text-decoration: underline; }
+    .btn-accept {
+      background: var(--pink);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.55rem 1.4rem;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-accept:hover { background: var(--purple); }
+
+    @media (max-width: 520px) {
+      .logo { font-size: 2rem; }
+      .input-row { flex-direction: column; }
+      .btn-find { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">🎵 Rhyme<span>Finder</span></div>
+    <p>Find the perfect rhyme for your poem, song, or rap 🎤</p>
+  </header>
+
+  <main>
+
+    <!-- AD TOP BANNER -->
+    <div class="ad-banner">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8825736074631088"
+           data-ad-slot="AUTO"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-card">
+      <label for="wordInput">Enter a word to find rhymes:</label>
+      <div class="input-row">
+        <input type="text" id="wordInput" placeholder="e.g. moon, love, dream…" autocomplete="off" />
+        <button class="btn-find" onclick="findRhymes()">Find Rhymes 🎶</button>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs" id="tabs" style="display:none;">
+      <button class="tab active" onclick="showTab('perfect', this)">✨ Perfect Rhymes</button>
+      <button class="tab" onclick="showTab('near', this)">🌀 Near Rhymes</button>
+      <button class="tab" onclick="showTab('synonyms', this)">💡 Synonyms</button>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="results">
+      <div class="state-box">
+        <span class="emoji">🎵</span>
+        <p>Type a word above and hit "Find Rhymes" to get started!</p>
+      </div>
+    </div>
+
+    <!-- AD MIDDLE -->
+    <div class="ad-banner" style="margin: 1.5rem 0;">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8825736074631088"
+           data-ad-slot="AUTO"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="how-section">
+      <h2>🌟 How to Use RhymeFinder</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="icon">✍️</div>
+          <strong>Type a word</strong>
+          <span>Enter any English word in the search box.</span>
+        </div>
+        <div class="step">
+          <div class="icon">🔍</div>
+          <strong>Click Find Rhymes</strong>
+          <span>We search thousands of rhyming words instantly.</span>
+        </div>
+        <div class="step">
+          <div class="icon">🎯</div>
+          <strong>Pick your rhyme</strong>
+          <span>Click any word to copy it to your clipboard!</span>
+        </div>
+        <div class="step">
+          <div class="icon">🎤</div>
+          <strong>Create!</strong>
+          <span>Use it in your poem, song, or rap lyrics.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AD BOTTOM -->
+    <div class="ad-banner">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8825736074631088"
+           data-ad-slot="AUTO"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 RhymeFinder &nbsp;|&nbsp; <a href="privacy.html">Privacy Policy</a> &nbsp;|&nbsp; Powered by <a href="https://www.datamuse.com/api/" target="_blank" rel="noopener">Datamuse API</a></p>
+  </footer>
+
+  <!-- COPY TOAST -->
+  <div id="toast">Copied! ✅</div>
+
+  <!-- COOKIE BANNER -->
+  <div id="cookie-banner">
+    <p>🍪 We use cookies to serve ads and improve your experience. By continuing, you agree to our <a href="privacy.html">Privacy Policy</a>.</p>
+    <button class="btn-accept" onclick="acceptCookies()">Accept</button>
+  </div>
+
+  <script>
+    // ── Data store ──
+    let data = { perfect: [], near: [], synonyms: [] };
+    let currentTab = 'perfect';
+
+    // ── Cookie banner ──
+    (function () {
+      if (localStorage.getItem('cookie_ok')) document.getElementById('cookie-banner').style.display = 'none';
+    })();
+    function acceptCookies() {
+      localStorage.setItem('cookie_ok', '1');
+      document.getElementById('cookie-banner').style.display = 'none';
+    }
+
+    // ── Enter key ──
+    document.getElementById('wordInput').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') findRhymes();
+    });
+
+    // ── Find rhymes ──
+    async function findRhymes() {
+      const word = document.getElementById('wordInput').value.trim().toLowerCase();
+      if (!word) return;
+
+      const resultsEl = document.getElementById('results');
+      const tabsEl = document.getElementById('tabs');
+
+      resultsEl.innerHTML = '<div class="state-box"><div class="loader"></div><p style="margin-top:1rem;">Finding rhymes for <strong>' + word + '</strong>…</p></div>';
+      tabsEl.style.display = 'none';
+
+      try {
+        const [perfectRes, nearRes, synRes] = await Promise.all([
+          fetch(`https://api.datamuse.com/words?rel_rhy=${encodeURIComponent(word)}&max=40`),
+          fetch(`https://api.datamuse.com/words?rel_nry=${encodeURIComponent(word)}&max=40`),
+          fetch(`https://api.datamuse.com/words?ml=${encodeURIComponent(word)}&max=30`)
+        ]);
+        const [perfect, near, synonyms] = await Promise.all([perfectRes.json(), nearRes.json(), synRes.json()]);
+
+        data.perfect  = perfect.map(w => w.word);
+        data.near     = near.map(w => w.word).filter(w => !data.perfect.includes(w));
+        data.synonyms = synonyms.map(w => w.word).filter(w => !data.perfect.includes(w) && !data.near.includes(w));
+
+        if (data.perfect.length + data.near.length + data.synonyms.length === 0) {
+          resultsEl.innerHTML = '<div class="state-box"><span class="emoji">😅</span><p>No rhymes found for "<strong>' + word + '</strong>". Try another word!</p></div>';
+          return;
+        }
+
+        tabsEl.style.display = 'flex';
+        document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === 0));
+        currentTab = 'perfect';
+        renderTab(word);
+
+      } catch (err) {
+        resultsEl.innerHTML = '<div class="state-box"><span class="emoji">😬</span><p>Something went wrong. Please try again!</p></div>';
+      }
+    }
+
+    // ── Render current tab ──
+    function renderTab(word) {
+      const words = data[currentTab];
+      const labels = { perfect: '✨ Perfect Rhymes', near: '🌀 Near Rhymes', synonyms: '💡 Synonyms' };
+      const classes = { perfect: 'exact', near: 'near', synonyms: '' };
+      const emojis = { perfect: '🎉', near: '😶', synonyms: '🤔' };
+
+      if (words.length === 0) {
+        document.getElementById('results').innerHTML =
+          '<div class="state-box"><span class="emoji">' + emojis[currentTab] + '</span><p>No ' + labels[currentTab].replace(/[✨🌀💡] /, '').toLowerCase() + ' found for this word.</p></div>';
+        return;
+      }
+
+      const pills = words.map(w =>
+        `<button class="rhyme-pill ${classes[currentTab]}" onclick="copyWord('${w}')" title="Click to copy">${w}</button>`
+      ).join('');
+
+      document.getElementById('results').innerHTML = `
+        <div class="section-title">${labels[currentTab]} <span class="badge">${words.length} words</span></div>
+        <div class="rhyme-grid">${pills}</div>
+        <p style="margin-top:1rem;font-size:0.83rem;color:var(--muted);">👆 Click any word to copy it!</p>
+      `;
+    }
+
+    // ── Tab switching ──
+    function showTab(tab, btn) {
+      currentTab = tab;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      renderTab('');
+    }
+
+    // ── Copy word ──
+    function copyWord(word) {
+      navigator.clipboard.writeText(word).catch(() => {});
+      const toast = document.getElementById('toast');
+      toast.textContent = '"' + word + '" copied! ✅';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+  </script>
+
+</body>
+</html>
